@@ -1,36 +1,48 @@
-# [Project name]
+# Triwid mui | Horror Archive
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A premium, cinematic horror-themed website that showcases Triwid mui's horror short stories (Read) and YouTube horror videos (Watch), pulling live content from external feeds — no database.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080, mounted at `/api`)
+- `pnpm --filter @workspace/triwid-mui run dev` — run the frontend (Vite, port 21254, mounted at `/`)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- No database required — all content is fetched live from external sources with in-memory caching
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- API: Express 5 (no DB — in-memory cached fetches from YouTube RSS, Blogger JSON feed, Pixiv ajax API)
+- Frontend: React + Vite, wouter (routing), framer-motion (animation), Tailwind
+- Validation: Zod (`zod/v4`)
+- API codegen: Orval (from OpenAPI spec) — `useListVideos`, `useListStories` hooks
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — source of truth for `/videos` and `/stories` endpoints
+- `artifacts/api-server/src/lib/youtube.ts` — resolves @triwidmui channel ID, parses YouTube RSS feed (5-min cache)
+- `artifacts/api-server/src/lib/stories.ts` — Blogger JSON feed (id/en) + Pixiv ajax API best-effort (ja), 10-min cache
+- `artifacts/api-server/src/routes/videos.ts`, `stories.ts` — API routes
+- `artifacts/triwid-mui/src/pages/` — Intro, Home, Watch, Read pages
+- `artifacts/triwid-mui/src/lib/store.tsx` — app state (intro seen, language, audio) via sessionStorage
+- `artifacts/triwid-mui/src/components/effects/` — Atmosphere (fog/noise), GlitchText
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- No database: all content (videos, stories) is fetched live from third-party feeds (YouTube RSS, Blogger, Pixiv) with in-memory TTL caching in the API server, since content is externally managed and doesn't need persistence.
+- No YouTube Data API key: relies on the public YouTube RSS feed for @triwidmui (capped at ~15 most recent videos) to avoid requiring API credentials — acceptable per product spec's fallback allowance.
+- Pixiv novel fetching is best-effort; when it fails (e.g. blocked/changed API), the `/stories?lang=ja` endpoint returns `{ stories: [], available: false }` rather than erroring, so the Read page can show a graceful "not available" state.
+- Intro-seen state uses `sessionStorage` (not persisted across browser sessions) so returning visitors within the same session skip the intro, but a fresh session always sees the cinematic intro.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Cinematic intro animation (glitch text reveal) shown once per session, then redirects to Home.
+- Home: menu with Read / Watch options.
+- Watch: paginated grid of @triwidmui YouTube videos (thumbnail, title, date) that open real YouTube links in a new tab — no embeds.
+- Read: language selector (Indonesia / English / 日本語) showing horror stories pulled live from Blogger (id/en) or Pixiv (ja, best-effort).
+- Floating nav (Home/Read/Watch/Language/Music) and ambient horror atmosphere effects (fog, flicker, glitch), muted by default.
 
 ## User preferences
 
@@ -38,7 +50,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The API server's `dev` script does a one-shot `build && start`, not a watcher — after editing any `artifacts/api-server/src/**` file, you must restart the "API Server" workflow for changes to take effect (stale `dist/` otherwise serves old routes).
+- Always import generated API types/hooks from the `@workspace/api-client-react` barrel, never from deep `/src/generated/...` paths.
+- `useListStories`/other Orval hooks with `query.enabled` need an explicit `queryKey` (via `getListStoriesQueryKey(...)`) passed alongside `enabled`.
 
 ## Pointers
 

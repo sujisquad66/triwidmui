@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Triwid mui | Horror Archive"
+version = "1.0.0"
+id = "artifacts/triwid-mui"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21254
+
+[services.development]
+run = "pnpm --filter @workspace/triwid-mui run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/triwid-mui", "run", "build" ]
+publicDir = "artifacts/triwid-mui/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21254"
+BASE_PATH = "/"

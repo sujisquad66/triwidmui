@@ -1,0 +1,461 @@
+You are an expert Full-Stack Web Developer, UI/UX Designer, and Animation Specialist.
+
+Create a premium horror-themed website called Triwid mui | Horror Archive.
+
+The website should feel like entering a cursed archive, an abandoned library, or a psychological horror game. It must be cinematic, immersive, modern, responsive, fast, and professionally designed.
+
+The website must work perfectly on Replit.
+
+---
+
+GENERAL STYLE
+
+Theme:
+
+- Psychological Horror
+- Dark Mystery
+- Cinematic
+- Elegant Horror
+- Mobile First
+- Fully Responsive
+
+Color Palette:
+
+- Black (#000000)
+- Dark Gray
+- Blood Red (#8B0000)
+- White text
+- Soft glowing red effects
+
+Fonts:
+
+- Horror-style Google Fonts (such as Creepster, Nosifer, or similar)
+- Readable font for story content
+
+The UI should feel premium, not cheap.
+
+---
+
+HORROR ATMOSPHERE
+
+Create an immersive horror experience using animations.
+
+Include:
+
+- Moving fog
+- Floating dust particles
+- Flickering lights
+- VHS distortion
+- RGB glitch
+- Screen noise overlay
+- Random screen flickers
+- Slow background zoom
+- Red glowing titles
+- Soft shadow animations
+- Lightning flashes occasionally
+- Small camera shake during transitions
+- Fade transitions
+- Smooth cinematic animations
+
+Optional:
+
+Random ghost silhouette appears for less than one second at random times.
+
+Do not overuse effects.
+
+The website should remain elegant.
+
+---
+
+BACKGROUND
+
+Create an animated horror background.
+
+Include:
+
+- Fog
+- Dark forest atmosphere
+- Abandoned archive feeling
+- Floating particles
+- Moving smoke
+- Darkness with subtle animation
+
+---
+
+HORROR MUSIC
+
+Automatically play horror ambience (respect browser autoplay policy).
+
+Music characteristics:
+
+- Dark drones
+- Wind
+- Whisper
+- Metal creaks
+- Ambient horror
+
+Loop forever.
+
+Volume approximately 20%.
+
+Create floating controls:
+
+🔊 Music On
+
+🔇 Music Off
+
+Music should never become annoying.
+
+---
+
+LOADING SCREEN
+
+Display:
+
+Triwid mui
+
+Horror Archive
+
+Use glitch animation.
+
+Display:
+
+Entering the Archive...
+
+Animated loading bar.
+
+Duration around 4 seconds.
+
+Then fade into the Main Menu.
+
+---
+
+MAIN MENU
+
+Display two large cinematic buttons.
+
+📖 READ
+
+🎬 WATCH
+
+Buttons should include:
+
+- Red glow
+- Hover animation
+- Slight shake
+- Ripple click animation
+- Cinematic transitions
+
+---
+
+WATCH PAGE
+
+Automatically load videos from:
+
+https://youtube.com/@triwidmui
+
+Requirements:
+
+Display:
+
+- Thumbnail
+- Video title
+- Upload date
+
+Clicking a video should open the official YouTube video.
+
+Do NOT embed videos.
+
+Open YouTube instead.
+
+If there are many videos:
+
+Generate automatic pagination.
+
+Example:
+
+Page 1
+
+12 videos
+
+Next →
+
+Page 2
+
+12 videos
+
+...
+
+Continue automatically.
+
+Never limit the number of pages.
+
+If there are 500 videos, automatically create enough pages.
+
+Pagination should include:
+
+- First
+- Previous
+- Page Numbers
+- Next
+- Last
+
+Automatically detect newly uploaded videos.
+
+New uploads must appear automatically.
+
+Use YouTube Data API whenever possible.
+
+If unavailable, use the official YouTube RSS feed as fallback.
+
+---
+
+READ PAGE
+
+After clicking READ
+
+Display language selection.
+
+Three large animated buttons.
+
+🇮🇩 Indonesia
+
+🇺🇸 English
+
+🇯🇵 日本語
+
+Animate buttons one by one.
+
+---
+
+STORY SOURCES
+
+Indonesia
+
+https://triwidmui-horor-indo.blogspot.com/?m=1
+
+English
+
+https://triwidmui-en-horror.blogspot.com/?m=1
+
+Japanese
+
+https://www.pixiv.net/en/users/117291873/novels
+
+Automatically load stories from each source.
+
+Never hardcode the story list.
+
+Requirements:
+
+Automatically detect newly published stories.
+
+Display newest stories first.
+
+Show:
+
+- Cover Image
+- Story Title
+- Short Description or Excerpt
+- Read Button
+
+If no thumbnail exists:
+
+Generate a beautiful horror placeholder image.
+
+Cards should have:
+
+- Glassmorphism
+- Red glow
+- Hover animations
+- Smooth appearance
+- Lazy loading
+
+Clicking Read opens the original story page.
+
+When new stories are published, they must automatically appear without editing the website.
+
+Use official RSS feeds or APIs whenever possible.
+
+Cache fetched data for better performance.
+
+Refresh automatically whenever visitors open the website.
+
+---
+
+FLOATING NAVIGATION
+
+Always visible.
+
+Top-right corner.
+
+Buttons:
+
+🏠 Home
+
+📖 Read
+
+🎬 Watch
+
+🌐 Language
+
+🔊 Music
+
+Language menu:
+
+Indonesia
+
+English
+
+日本語
+
+Switch language instantly without reloading the website.
+
+---
+
+PAGE TRANSITIONS
+
+Between every page use:
+
+- Fade
+- Blur
+- Glitch
+- Zoom
+- Cinematic transition
+
+---
+
+USER EXPERIENCE
+
+Smooth scrolling.
+
+Responsive layout.
+
+Fast loading.
+
+Elegant animations.
+
+Professional appearance.
+
+Premium horror game feeling.
+
+---
+
+PERFORMANCE
+
+Optimize:
+
+Images
+
+JavaScript
+
+CSS
+
+Fonts
+
+Animations
+
+Avoid unnecessary libraries.
+
+Use lightweight code.
+
+---
+
+ERROR HANDLING
+
+If YouTube cannot be reached:
+
+Display cinematic loading.
+
+Retry automatically.
+
+Show friendly horror-themed message.
+
+If Blogger cannot be reached:
+
+Retry automatically.
+
+Never leave blank pages.
+
+If Pixiv cannot be reached:
+
+Show retry animation.
+
+Display friendly message.
+
+Keep the website functional.
+
+---
+
+FUTURE PROOF
+
+This website should continue working for years.
+
+Whenever:
+
+- A new story is published
+- A new video is uploaded
+
+Everything should automatically update.
+
+No manual editing should ever be required.
+
+---
+
+PWA
+
+Turn the website into a Progressive Web App.
+
+Users should be able to install it on Android and Desktop.
+
+Include:
+
+- Manifest
+- Service Worker
+- Offline cache
+- Fast loading
+- App icon
+
+---
+
+FILE STRUCTURE
+
+index.html
+
+style.css
+
+script.js
+
+manifest.json
+
+service-worker.js
+
+assets/
+
+images/
+
+audio/
+
+icons/
+
+---
+
+CODE QUALITY
+
+Write clean, professional, modular, and well-commented code.
+
+Separate HTML, CSS, and JavaScript.
+
+Everything should be easy to maintain.
+
+---
+
+FINAL GOAL
+
+The website should feel like a premium horror archive, not a simple blog.
+
+Visitors should immediately feel they are entering a haunted digital library.
+
+Animations should be cinematic, smooth, elegant, immersive, and optimized.
+
+The final result should look like a professional horror game website while remaining lightweight and mobile-friendly.
