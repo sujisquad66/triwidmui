@@ -1,10 +1,26 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'wouter';
+import heroImage from '@assets/Gemini_Generated_Image_9xr4769xr4769xr4_1783353288282.png';
 
 export function Home() {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center relative">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+        className="absolute inset-0 -z-10 flex items-center justify-center overflow-hidden pointer-events-none"
+      >
+        <img
+          src={heroImage}
+          alt=""
+          className="h-full w-auto max-w-none object-cover opacity-30 md:opacity-40 filter grayscale-[0.3] blur-[1px]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/70 to-background" />
+        <div className="absolute inset-0 bg-background/40" />
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

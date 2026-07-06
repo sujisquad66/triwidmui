@@ -90,16 +90,62 @@ async function fetchBloggerStories(lang: "id" | "en"): Promise<StoryResult> {
   }
 }
 
+const PIXIV_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+  Accept: "application/json",
+  Referer: `https://www.pixiv.net/en/users/${PIXIV_USER_ID}/novels`,
+};
+
+const PIXIV_NOVEL_CONCURRENCY = 5;
+const PIXIV_MAX_NOVELS = 24;
+
+function pixivContentToExcerpt(content: string): string {
+  const text = stripHtml(content.replace(/\n/g, " <br/> "));
+  return text.length > 220 ? `${text.slice(0, 220)}…` : text;
+}
+
+async function fetchPixivNovelDetail(id: string): Promise<RawStory | null> {
+  try {
+    const res = await fetch(`https://www.pixiv.net/ajax/novel/${id}?lang=en`, {
+      headers: {
+        ...PIXIV_HEADERS,
+        Referer: `https://www.pixiv.net/en/novel/show.php?id=${id}`,
+      },
+    });
+    if (!res.ok) {
+      logger.warn({ status: res.status, id }, "Failed to load Pixiv novel detail");
+      return null;
+    }
+    const json = (await res.json()) as any;
+    if (json.error) {
+      logger.warn({ message: json.message, id }, "Pixiv novel detail returned an error");
+      return null;
+    }
+
+    const body = json.body ?? {};
+    const content: string = body.content ?? body.description ?? "";
+
+    return {
+      id: String(body.id ?? id),
+      title: body.title ?? `Novel #${id}`,
+      excerpt: pixivContentToExcerpt(content) || "A tale from the pixiv archive — open it to read the full entry.",
+      coverImage: body.coverUrl ?? PLACEHOLDER_COVER,
+      link: `https://www.pixiv.net/en/novel/show.php?id=${id}`,
+      publishedAt: body.createDate ?? body.uploadDate ?? new Date().toISOString(),
+      source: "pixiv",
+    };
+  } catch (err) {
+    logger.error({ err, id }, "Error fetching Pixiv novel detail");
+    return null;
+  }
+}
+
 async function fetchPixivStories(): Promise<StoryResult> {
   try {
     const res = await fetch(
-      `https://www.pixiv.net/ajax/user/${PIXIV_USER_ID}/profile/novels?lang=en`,
-      {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (compatible; TriwidArchiveBot/1.0)",
-          Accept: "application/json",
-        },
-      },
+      `https://www.pixiv.net/ajax/user/${PIXIV_USER_ID}/profile/all?lang=en`,
+      { headers: PIXIV_HEADERS },
     );
     if (!res.ok) {
       logger.warn({ status: res.status }, "Failed to load Pixiv novel list");
@@ -112,23 +158,26 @@ async function fetchPixivStories(): Promise<StoryResult> {
     }
 
     const novelsMap: Record<string, unknown> = json.body?.novels ?? {};
-    const novelIds = Object.keys(novelsMap);
+    const novelIds = Object.keys(novelsMap).slice(0, PIXIV_MAX_NOVELS);
 
     if (novelIds.length === 0) {
       return { stories: [], available: true };
     }
 
-    const stories: RawStory[] = novelIds.map((id) => ({
-      id,
-      title: `Novel #${id}`,
-      excerpt: "A tale from the pixiv archive — open it to read the full entry.",
-      coverImage: PLACEHOLDER_COVER,
-      link: `https://www.pixiv.net/en/novel/show.php?id=${id}`,
-      publishedAt: new Date().toISOString(),
-      source: "pixiv",
-    }));
+    const stories: RawStory[] = [];
+    for (let i = 0; i < novelIds.length; i += PIXIV_NOVEL_CONCURRENCY) {
+      const batch = novelIds.slice(i, i + PIXIV_NOVEL_CONCURRENCY);
+      const results = await Promise.all(batch.map(fetchPixivNovelDetail));
+      for (const story of results) {
+        if (story) stories.push(story);
+      }
+    }
 
-    return { stories, available: true };
+    stories.sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+    );
+
+    return { stories, available: stories.length > 0 };
   } catch (err) {
     logger.error({ err }, "Error fetching Pixiv stories");
     return { stories: [], available: false };
